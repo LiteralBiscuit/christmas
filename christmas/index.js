@@ -1,1 +1,122 @@
-const e=document.createElement("div");e.id="jssection",document.body.appendChild(e);const t=document.createElement("table");e.appendChild(t),e.classList.add("hide");const n=document.createElement("thead");t.appendChild(n);const a=document.createElement("tr");n.appendChild(a);const o=["Osztály","Manó","Műszak"];for(const e of o){const t=document.createElement("th");t.innerText=e,a.appendChild(t)}const l=[{what:"Logisztika",who1:"Kovács Máté",shift1:"Délelöttös",who2:"Kovács József",shift2:"Délutános"},{what:"Könyvelés",who1:"Szabó Anna",shift1:"Éjszakai"},{what:"Játékfejlesztés",who1:"Varga Péter",shift1:"Délutános",who2:"Nagy Eszter",shift2:"Éjszakai"}];initSelect(l);const d=document.createElement("tbody");function renderTbody(e){const t=document.getElementById("jstbody");t.innerHTML="";for(const n of e){const e=document.createElement("tr");t.appendChild(e);const a=document.createElement("td");a.innerText=n.what,e.appendChild(a);const o=document.createElement("td");o.innerText=n.who1,e.appendChild(o);const l=document.createElement("td");if(l.innerText=n.shift1,e.appendChild(l),n.who2&&n.shift2){a.rowSpan=2;const e=document.createElement("tr");t.appendChild(e);const o=document.createElement("td");o.innerText=n.who2,e.appendChild(o);const l=document.createElement("td");l.innerText=n.shift2,e.appendChild(l)}}}d.id="jstbody",t.appendChild(d),renderTbody(l);const c=undefined,i=s([{id:"osztaly",label:"Osztály",name:"osztaly"},{id:"mano1",label:"Manó 1",name:"mano1"},{id:"muszak1",label:"Manó 1 műszak",name:"muszak1",type:"select",optionList:[{value:"1",label:"Délelöttös"},{value:"2",label:"Délutános"},{value:"3",label:"Éjszakai"}]},{id:"masodikmano",label:"Két manót veszek fel",name:"masodikmano",type:"checkbox"},{id:"mano2",label:"Manó 2",name:"mano2"},{id:"muszak2",label:"Manó 2 műszak",name:"muszak2",type:"select",optionList:[{value:"1",label:"Délelöttös"},{value:"2",label:"Délutános"},{value:"3",label:"Éjszakai"}]}]);function s(e){const t=document.createElement("form");t.id="jsform";for(const n of e)m(n,t);const n=document.createElement("button");return n.innerText="Hozzaadas",t.appendChild(n),t}function m(e,t){const n=document.createElement("div");if(t.appendChild(n),e.type&&"select"!=e.type){if("checkbox"==e.type){const t=document.createElement("input");t.id=e.id,t.name=e.name,t.type="checkbox",n.appendChild(t);const a=document.createElement("label");a.innerText=e.label,a.htmlFor=e.id,n.appendChild(a)}}else{const t=document.createElement("label");if(t.innerText=e.label,t.htmlFor=e.id,n.appendChild(t),n.appendChild(document.createElement("br")),e.type){if("select"===e.type){const t=document.createElement("select");t.id=e.id,n.appendChild(t);const a=document.createElement("option");a.innerText="Válassz műszakot!",a.value="",t.appendChild(a);for(const n of e.optionList){const e=document.createElement("option");e.innerText=n.label,e.value=n.value,t.appendChild(e)}}}else{const t=document.createElement("input");t.id=e.id,t.name=e.name,n.appendChild(t),n.appendChild(document.createElement("br"))}}const a=document.createElement("span");a.classList.add("error"),n.appendChild(a)}function r(e){let t=!0;if(""==e.value){const n=undefined;e.parentElement.querySelector(".error").innerText="Kötelező elem!",t=!1}return t}i.id="jsform",e.appendChild(i),i.addEventListener("submit",function(e){e.preventDefault();const t=e.target,n=t.querySelector("#osztaly"),a=t.querySelector("#mano1"),o=t.querySelector("#muszak1"),d=t.querySelector("#mano2"),c=t.querySelector("#muszak2"),i=t.querySelector("#masodikmano"),s=n.value,m=a.value,u=o.value,h=d.value,f=c.value;p(t);const E=undefined;if(r(n)&r(a)&r(o)){const e={};e.what=s,e.who1=m,e.shift1=mapMuszak(u),i.checked&&(e.who2=h,e.shift2=mapMuszak(f)),createNewElement(e,t,l)}});const u=undefined;function p(e){const t=e.querySelectorAll(".error");for(const e of t)e.innerText=""}document.getElementById("htmlform").addEventListener("submit",function(e){e.preventDefault();const t=e.target,n=t.querySelector("#manochooser"),a=t.querySelector("#manotev1"),o=t.querySelector("#manotev2");p(t);const l=undefined;if(r(n)&r(a)){const e=document.getElementById("htmltbody"),l=document.createElement("tr");e.appendChild(l);const d=document.createElement("td");d.innerText=n.value,l.appendChild(d);const c=document.createElement("td");if(c.innerText=a.value,l.appendChild(c),o.value){const e=document.createElement("td");e.innerText=o.value,l.appendChild(e)}else c.colSpan=2;t.reset()}}),initCheckbox(document.getElementById("jsform").querySelector("#masodikmano"));
+const jssection = document.createElement("div")
+jssection.id = "jssection"
+jssection.classList.add("hide")
+document.body.appendChild(jssection)
+const table = document.createElement("table")
+jssection.appendChild(table)
+ 
+/**
+ *  @type {string[]}
+*/
+const theadArr = ["Osztály", "Manó", "Műszak"]
+const thead = document.createElement("thead")
+const tr = document.createElement("tr")
+for(const text of theadArr){
+    createCell(text, tr, "th")
+}
+thead.appendChild(tr)
+table.appendChild(thead)
+ 
+/**
+ * @typedef {Object} TbodyItem
+ * @property {string} what 
+ * @property {string} who1 
+ * @property {string} shift1 
+ * @property {string} [who2] 
+ * @property {string} [shift2]
+ */
+ 
+/**
+ *  @type {TbodyItem[]}
+*/
+const tbodyArr = [
+    { what: "Logisztika", who1: "Kovács Máté", shift1: "Délelöttös", who2: "Kovács József", shift2: "Délutános" },
+    { what: "Könyvelés", who1: "Szabó Anna", shift1: "Éjszakai" },
+    { what: "Játékfejlesztés", who1: "Varga Péter", shift1: "Délutános", who2: "Nagy Eszter", shift2: "Éjszakai" }
+]
+initSelect(tbodyArr)
+ 
+const tbody = document.createElement("tbody")
+tbody.id = "jstbody"
+table.appendChild(tbody)
+ 
+renderTbody(tbodyArr)
+ 
+
+/**
+ * @typedef {Object} FormField
+ * @property {string} id 
+ * @property {string} label 
+ * @property {string} name 
+ * @property {"checkbox"|"select"} [type] 
+ * @property {{value:string,label:string}[]} [optionList] 
+ */
+ 
+/** 
+ * @type {FormField[]}
+ */
+const formArr = [
+    { id: "osztaly", label: "Osztály", name: "osztaly" },
+    { id: "mano1", label: "Manó 1", name: "mano1" },
+    { id: "muszak1", label: "Manó 1 műszak", name: "muszak1", type: "select", optionList: [
+        { value: "1", label: "Délelöttös" },
+        { value: "2", label: "Délutános" },
+        { value: "3", label: "Éjszakai" }
+    ]},
+    { id: "masodikmano", label: "Két manót veszek fel", name: "masodikmano", type: "checkbox" },
+    { id: "mano2", label: "Manó 2", name: "mano2" },
+    { id: "muszak2", label: "Manó 2 műszak", name: "muszak2", type: "select", optionList: [
+        { value: "1", label: "Délelöttös" },
+        { value: "2", label: "Délutános" },
+        { value: "3", label: "Éjszakai" }
+    ]}
+]
+const form = createForm(formArr)
+form.id = "jsform"
+jssection.appendChild(form)
+ 
+form.addEventListener("submit", function(e){
+    e.preventDefault()
+    const osztaly = form.querySelector("#osztaly")
+    const mano1 = form.querySelector("#mano1")
+    const muszak1 = form.querySelector("#muszak1")
+    const masodikmano = form.querySelector("#masodikmano")
+    const mano2 = form.querySelector("#mano2")
+    const muszak2 = form.querySelector("#muszak2")
+ 
+    clearErrors(form)
+    if(validate(osztaly) & validate(mano1) & validate(muszak1)){
+        const newEntry = { what: osztaly.value, who1: mano1.value, shift1: mapMuszak(muszak1.value) }
+        if(masodikmano.checked){
+            newEntry.who2 = mano2.value
+            newEntry.shift2 = mapMuszak(muszak2.value)
+        }
+        createNewElement(newEntry, form, tbodyArr)
+    }
+})
+
+document.getElementById("htmlform").addEventListener("submit", function(e){
+    e.preventDefault()
+    const chooser = e.target.querySelector("#manochooser")
+    const man1 = e.target.querySelector("#manotev1")
+    const man2 = e.target.querySelector("#manotev2")
+ 
+    clearErrors(e.target)
+    if(validate(chooser) & validate(man1)){
+        const tbodyHTML = document.getElementById("htmltbody")
+        const tr = document.createElement("tr")
+        tbodyHTML.appendChild(tr)
+ 
+        createCell(chooser.value, tr, "td")
+        const td2 = createCell(man1.value, tr, "td")
+ 
+        if(man2.value){
+            createCell(man2.value, tr, "td")
+        } else {
+            td2.colSpan = 2
+        }
+ 
+        e.target.reset()
+    }
+})
+initCheckbox(form.querySelector("#masodikmano"))
